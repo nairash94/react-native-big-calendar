@@ -95,6 +95,7 @@ export interface CalendarContainerProps<T extends ICalendarEventBase> {
   activeDate?: Date
   headerComponent?: React.ReactElement | null
   headerComponentStyle?: ViewStyle
+  hourColumnStyle?: ViewStyle
   hourStyle?: TextStyle
   showAllDayEventCell?: boolean
   sortedMonthView?: boolean
@@ -138,6 +139,7 @@ function _CalendarContainer<T extends ICalendarEventBase>({
   activeDate,
   headerComponent = null,
   headerComponentStyle = {},
+  hourColumnStyle,
   hourStyle = {},
   showAllDayEventCell = true,
   moreLabel = '{moreCount} More',
@@ -299,6 +301,7 @@ function _CalendarContainer<T extends ICalendarEventBase>({
         renderEvent={renderEvent}
         headerComponent={headerComponent}
         headerComponentStyle={headerComponentStyle}
+        hourColumnStyle={hourColumnStyle}
         hourStyle={hourStyle}
         isEventOrderingEnabled={isEventOrderingEnabled}
       />

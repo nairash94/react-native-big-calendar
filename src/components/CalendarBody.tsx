@@ -54,6 +54,7 @@ interface CalendarBodyProps<T extends ICalendarEventBase> {
   renderEvent?: EventRenderer<T>
   headerComponent?: React.ReactElement | null
   headerComponentStyle?: ViewStyle
+  hourColumnStyle?: ViewStyle
   hourStyle?: TextStyle
   hideHours?: Boolean
   isEventOrderingEnabled?: boolean
@@ -78,6 +79,7 @@ function _CalendarBody<T extends ICalendarEventBase>({
   renderEvent,
   headerComponent = null,
   headerComponentStyle = {},
+  hourColumnStyle,
   hourStyle = {},
   hideHours = false,
   isEventOrderingEnabled = true,
@@ -174,7 +176,7 @@ function _CalendarBody<T extends ICalendarEventBase>({
           {...(Platform.OS === 'web' ? panResponder.panHandlers : {})}
         >
           {!hideHours && (
-            <View style={[u['z-20'], u['w-50']]}>
+            <View style={[u['z-20'], u['w-50'], hourColumnStyle]}>
               {hours.map((hour) => (
                 <HourGuideColumn
                   key={hour}
