@@ -10,6 +10,7 @@ import {
   EventCellStyle,
   EventRenderer,
   HeaderRenderer,
+  HorizontalDirection,
   ICalendarEventBase,
   Mode,
   MonthHeaderRenderer,
@@ -193,29 +194,24 @@ function _CalendarContainer<T extends ICalendarEventBase>({
 
   //const theme = useTheme()
 
-  // const onSwipeHorizontal = React.useCallback(
-  //   (direction: HorizontalDirection) => {
-  //     if (!swipeEnabled) {
-  //       return
-  //     }
-  //     let nextTargetDate: dayjs.Dayjs
-  //     if ((direction === 'LEFT' && !theme.isRTL) || (direction === 'RIGHT' && theme.isRTL)) {
-  //       nextTargetDate = targetDate.add(modeToNum(mode, targetDate), 'day')
-  //     } else {
-  //       if (mode === 'month') {
-  //         nextTargetDate = targetDate.add(targetDate.date() * -1, 'day')
-  //       } else {
-  //         nextTargetDate = targetDate.add(modeToNum(mode, targetDate) * -1, 'day')
-  //       }
-  //     }
-  //     setTargetDate(nextTargetDate)
-  //     if (onChangeDate) {
-  //       const nextDateRange = getDateRange(nextTargetDate)
-  //       onChangeDate([nextDateRange[0].toDate(), nextDateRange.slice(-1)[0].toDate()])
-  //     }
-  //   },
-  //   [swipeEnabled, targetDate, mode, theme.isRTL, getDateRange, onChangeDate],
-  // )
+  const onSwipeHorizontal = React.useCallback((direction: HorizontalDirection) => {
+    return
+    // let nextTargetDate: dayjs.Dayjs
+    // if ((direction === 'LEFT' && !theme.isRTL) || (direction === 'RIGHT' && theme.isRTL)) {
+    //   nextTargetDate = targetDate.add(modeToNum(mode, targetDate), 'day')
+    // } else {
+    //   if (mode === 'month') {
+    //     nextTargetDate = targetDate.add(targetDate.date() * -1, 'day')
+    //   } else {
+    //     nextTargetDate = targetDate.add(modeToNum(mode, targetDate) * -1, 'day')
+    //   }
+    // }
+    //setTargetDate(nextTargetDate)
+    // if (onChangeDate) {
+    //   const nextDateRange = getDateRange(nextTargetDate)
+    //   onChangeDate([nextDateRange[0].toDate(), nextDateRange.slice(-1)[0].toDate()])
+    // }
+  }, [])
 
   const commonProps = {
     cellHeight,
@@ -236,8 +232,6 @@ function _CalendarContainer<T extends ICalendarEventBase>({
       weekDayHeaderHighlightColor: weekDayHeaderHighlightColor,
       showAllDayEventCell: showAllDayEventCell,
     }
-    // if(date && date.toString() !== targetDate.toDate().toString())
-    //   return null;
     return (
       <React.Fragment>
         <HeaderComponentForMonthView {...headerProps} />
@@ -255,7 +249,7 @@ function _CalendarContainer<T extends ICalendarEventBase>({
           onPressCell={onPressCell}
           onPressDateHeader={onPressDateHeader}
           onPressEvent={onPressEvent}
-          //onSwipeHorizontal={onSwipeHorizontal}
+          onSwipeHorizontal={onSwipeHorizontal}
           renderEvent={renderEvent}
           targetDate={date ?? dayjs()}
           maxVisibleEventCount={maxVisibleEventCount}
@@ -297,7 +291,7 @@ function _CalendarContainer<T extends ICalendarEventBase>({
         showTime={showTime}
         onPressCell={onPressCell}
         onPressEvent={onPressEvent}
-        //onSwipeHorizontal={onSwipeHorizontal}
+        onSwipeHorizontal={onSwipeHorizontal}
         renderEvent={renderEvent}
         headerComponent={headerComponent}
         headerComponentStyle={headerComponentStyle}
