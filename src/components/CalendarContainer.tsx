@@ -10,7 +10,6 @@ import {
   EventCellStyle,
   EventRenderer,
   HeaderRenderer,
-  HorizontalDirection,
   ICalendarEventBase,
   Mode,
   MonthHeaderRenderer,
