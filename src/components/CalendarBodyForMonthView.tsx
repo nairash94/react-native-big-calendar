@@ -16,7 +16,7 @@ import {
   WeekNum,
 } from '../interfaces'
 import { useTheme } from '../theme/ThemeContext'
-import { typedMemo } from '../utils'
+import { mutableFilter, typedMemo } from '../utils'
 import { CalendarEventForMonthView } from './CalendarEventForMonthView'
 import { getWeeksWithAdjacentMonths } from '..'
 
@@ -57,15 +57,15 @@ function _CalendarBodyForMonthView<T extends ICalendarEventBase>({
   hideNowIndicator,
   showAdjacentMonths,
   renderEvent,
-  maxVisibleEventCount,
+  //maxVisibleEventCount,
   weekStartsOn,
   eventMinHeightForMonthView,
-  moreLabel,
-  sortedMonthView,
-}: CalendarBodyForMonthViewProps<T>) {
+}: //moreLabel,
+//sortedMonthView,
+CalendarBodyForMonthViewProps<T>) {
   const { now } = useNow(!hideNowIndicator)
   const [calendarWidth, setCalendarWidth] = React.useState<number>(0)
-
+  const availableEvents = [...events]
   const panResponder = usePanResponder({
     onSwipeHorizontal,
   })
@@ -90,26 +90,33 @@ function _CalendarBodyForMonthView<T extends ICalendarEventBase>({
     [calendarCellTextStyle],
   )
 
-  const sortedEvents = React.useCallback(
-    (day: dayjs.Dayjs) => {
-      return sortedMonthView
-        ? events
-            .filter(({ start, end }) =>
-              day.isBetween(dayjs(start).startOf('day'), dayjs(end).endOf('day'), null, '[)'),
-            )
-            .sort((a, b) => {
-              if (dayjs(a.start).isSame(b.start, 'day')) {
-                const aDuration = dayjs.duration(dayjs(a.end).diff(dayjs(a.start))).days()
-                const bDuration = dayjs.duration(dayjs(b.end).diff(dayjs(b.start))).days()
-                return bDuration - aDuration
-              }
-              return a.start.getTime() - b.start.getTime()
-            })
-        : events.filter(({ start, end }) =>
-            day.isBetween(dayjs(start).startOf('day'), dayjs(end).endOf('day'), null, '[)'),
-          )
+  const _renderMappedEvent = React.useCallback(
+    (event: T) => {
+      return (
+        <CalendarEventForMonthView
+          key={event.title}
+          event={event}
+          eventCellStyle={eventCellStyle}
+          onPressEvent={onPressEvent}
+          renderEvent={renderEvent}
+          date={dayjs(event.start)}
+          dayOfTheWeek={dayjs(event.start).day()}
+          calendarWidth={calendarWidth}
+          isRTL={theme.isRTL}
+          eventMinHeightForMonthView={eventMinHeightForMonthView}
+          showAdjacentMonths={showAdjacentMonths}
+        />
+      )
     },
-    [events, sortedMonthView],
+    [
+      calendarWidth,
+      eventCellStyle,
+      eventMinHeightForMonthView,
+      onPressEvent,
+      renderEvent,
+      showAdjacentMonths,
+      theme.isRTL,
+    ],
   )
 
   return (
@@ -195,40 +202,12 @@ function _CalendarBodyForMonthView<T extends ICalendarEventBase>({
                   </Text>
                 </TouchableOpacity>
                 {date &&
-                  sortedEvents(date).reduce(
-                    (elements, event, index, events) => [
-                      ...elements,
-                      index > maxVisibleEventCount ? null : index === maxVisibleEventCount ? (
-                        <Text
-                          key={index}
-                          style={[
-                            theme.typography.moreLabel,
-                            { marginTop: 2, color: theme.palette.moreLabel },
-                          ]}
-                        >
-                          {moreLabel.replace(
-                            '{moreCount}',
-                            `${events.length - maxVisibleEventCount}`,
-                          )}
-                        </Text>
-                      ) : (
-                        <CalendarEventForMonthView
-                          key={index}
-                          event={event}
-                          eventCellStyle={eventCellStyle}
-                          onPressEvent={onPressEvent}
-                          renderEvent={renderEvent}
-                          date={date}
-                          dayOfTheWeek={ii}
-                          calendarWidth={calendarWidth}
-                          isRTL={theme.isRTL}
-                          eventMinHeightForMonthView={eventMinHeightForMonthView}
-                          showAdjacentMonths={showAdjacentMonths}
-                        />
-                      ),
-                    ],
-                    [] as (null | JSX.Element)[],
-                  )}
+                  mutableFilter(
+                    availableEvents,
+                    ({ start }) =>
+                      dayjs(start).isBetween(date.startOf('day'), date.endOf('day'), null, '[)'),
+                    true,
+                  ).map(_renderMappedEvent)}
               </TouchableOpacity>
             ))}
         </View>

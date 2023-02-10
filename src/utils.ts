@@ -289,6 +289,7 @@ export function mutableFilter(
     ({ start }: { start: any }): boolean
     (arg0: ICalendarEventBase, arg1: number, arg2: ICalendarEventBase[]): any
   },
+  findFirstOnly?: boolean,
 ) {
   let result: any[] = []
   if (!(array && array.length)) {
@@ -303,6 +304,7 @@ export function mutableFilter(
     if (predicate(value, index, array)) {
       result.push(value)
       indexes.push(index)
+      if (findFirstOnly) break
     }
   }
   removeFilteredIndex(array, indexes)
