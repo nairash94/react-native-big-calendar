@@ -155,6 +155,7 @@ CalendarBodyForMonthViewProps<T>) {
             )
             .map((date, ii) => (
               <TouchableOpacity
+                disabled={!onPressCell}
                 onPress={() => date && onPressCell && onPressCell(date.toDate())}
                 style={[
                   i > 0 && u['border-t'],
