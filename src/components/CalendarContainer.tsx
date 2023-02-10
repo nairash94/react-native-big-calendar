@@ -10,13 +10,12 @@ import {
   EventCellStyle,
   EventRenderer,
   HeaderRenderer,
-  HorizontalDirection,
   ICalendarEventBase,
   Mode,
   MonthHeaderRenderer,
   WeekNum,
 } from '../interfaces'
-import { useTheme } from '../theme/ThemeContext'
+//import { useTheme } from '../theme/ThemeContext'
 import {
   getDatesInMonth,
   getDatesInNextCustomDays,
@@ -24,7 +23,6 @@ import {
   getDatesInNextThreeDays,
   getDatesInWeek,
   isAllDayEvent,
-  modeToNum,
   typedMemo,
 } from '../utils'
 import { CalendarBody } from './CalendarBody'
@@ -75,7 +73,7 @@ export interface CalendarContainerProps<T extends ICalendarEventBase> {
   renderHeaderForMonthView?: MonthHeaderRenderer
 
   ampm?: boolean
-  date?: Date
+  date?: dayjs.Dayjs
   locale?: string
   hideNowIndicator?: boolean
   showAdjacentMonths?: boolean
@@ -124,9 +122,9 @@ function _CalendarContainer<T extends ICalendarEventBase>({
   dayHeaderHighlightColor = '',
   weekDayHeaderHighlightColor = '',
   bodyContainerStyle = {},
-  swipeEnabled = true,
+  //swipeEnabled = true,
   weekStartsOn = 0,
-  onChangeDate,
+  //onChangeDate,
   onPressCell,
   onPressDateHeader,
   onPressEvent,
@@ -148,13 +146,13 @@ function _CalendarContainer<T extends ICalendarEventBase>({
   hideHours = false,
   isEventOrderingEnabled,
 }: CalendarContainerProps<T>) {
-  const [targetDate, setTargetDate] = React.useState(dayjs(date))
-
-  React.useEffect(() => {
-    if (date) {
-      setTargetDate(dayjs(date))
-    }
-  }, [date])
+  //const [targetDate, setTargetDate] = React.useState(dayjs(date))
+  // console.log("CalendarContainer targetDate>>",targetDate,"<<<>>>>",date);
+  //   React.useEffect(() => {
+  //     if (date) {
+  //       setTargetDate(dayjs(date))
+  //     }
+  //   }, [date])
 
   const allDayEvents = React.useMemo(
     () => events.filter((event) => isAllDayEvent(event.start, event.end)),
@@ -193,35 +191,35 @@ function _CalendarContainer<T extends ICalendarEventBase>({
     [height, hourRowHeight],
   )
 
-  const theme = useTheme()
+  //const theme = useTheme()
 
-  const onSwipeHorizontal = React.useCallback(
-    (direction: HorizontalDirection) => {
-      if (!swipeEnabled) {
-        return
-      }
-      let nextTargetDate: dayjs.Dayjs
-      if ((direction === 'LEFT' && !theme.isRTL) || (direction === 'RIGHT' && theme.isRTL)) {
-        nextTargetDate = targetDate.add(modeToNum(mode, targetDate), 'day')
-      } else {
-        if (mode === 'month') {
-          nextTargetDate = targetDate.add(targetDate.date() * -1, 'day')
-        } else {
-          nextTargetDate = targetDate.add(modeToNum(mode, targetDate) * -1, 'day')
-        }
-      }
-      setTargetDate(nextTargetDate)
-      if (onChangeDate) {
-        const nextDateRange = getDateRange(nextTargetDate)
-        onChangeDate([nextDateRange[0].toDate(), nextDateRange.slice(-1)[0].toDate()])
-      }
-    },
-    [swipeEnabled, targetDate, mode, theme.isRTL, getDateRange, onChangeDate],
-  )
+  // const onSwipeHorizontal = React.useCallback(
+  //   (direction: HorizontalDirection) => {
+  //     if (!swipeEnabled) {
+  //       return
+  //     }
+  //     let nextTargetDate: dayjs.Dayjs
+  //     if ((direction === 'LEFT' && !theme.isRTL) || (direction === 'RIGHT' && theme.isRTL)) {
+  //       nextTargetDate = targetDate.add(modeToNum(mode, targetDate), 'day')
+  //     } else {
+  //       if (mode === 'month') {
+  //         nextTargetDate = targetDate.add(targetDate.date() * -1, 'day')
+  //       } else {
+  //         nextTargetDate = targetDate.add(modeToNum(mode, targetDate) * -1, 'day')
+  //       }
+  //     }
+  //     setTargetDate(nextTargetDate)
+  //     if (onChangeDate) {
+  //       const nextDateRange = getDateRange(nextTargetDate)
+  //       onChangeDate([nextDateRange[0].toDate(), nextDateRange.slice(-1)[0].toDate()])
+  //     }
+  //   },
+  //   [swipeEnabled, targetDate, mode, theme.isRTL, getDateRange, onChangeDate],
+  // )
 
   const commonProps = {
     cellHeight,
-    dateRange: getDateRange(targetDate),
+    dateRange: getDateRange(dayjs(date)),
     mode,
     onPressEvent,
     hideHours,
@@ -238,6 +236,8 @@ function _CalendarContainer<T extends ICalendarEventBase>({
       weekDayHeaderHighlightColor: weekDayHeaderHighlightColor,
       showAllDayEventCell: showAllDayEventCell,
     }
+    // if(date && date.toString() !== targetDate.toDate().toString())
+    //   return null;
     return (
       <React.Fragment>
         <HeaderComponentForMonthView {...headerProps} />
@@ -255,9 +255,9 @@ function _CalendarContainer<T extends ICalendarEventBase>({
           onPressCell={onPressCell}
           onPressDateHeader={onPressDateHeader}
           onPressEvent={onPressEvent}
-          onSwipeHorizontal={onSwipeHorizontal}
+          //onSwipeHorizontal={onSwipeHorizontal}
           renderEvent={renderEvent}
-          targetDate={targetDate}
+          targetDate={date ?? dayjs()}
           maxVisibleEventCount={maxVisibleEventCount}
           eventMinHeightForMonthView={eventMinHeightForMonthView}
           sortedMonthView={sortedMonthView}
@@ -297,7 +297,7 @@ function _CalendarContainer<T extends ICalendarEventBase>({
         showTime={showTime}
         onPressCell={onPressCell}
         onPressEvent={onPressEvent}
-        onSwipeHorizontal={onSwipeHorizontal}
+        //onSwipeHorizontal={onSwipeHorizontal}
         renderEvent={renderEvent}
         headerComponent={headerComponent}
         headerComponentStyle={headerComponentStyle}
