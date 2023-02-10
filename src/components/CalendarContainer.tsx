@@ -194,7 +194,7 @@ function _CalendarContainer<T extends ICalendarEventBase>({
 
   //const theme = useTheme()
 
-  const onSwipeHorizontal = React.useCallback((direction: HorizontalDirection) => {
+  const onSwipeHorizontal = React.useCallback(() => {
     return
     // let nextTargetDate: dayjs.Dayjs
     // if ((direction === 'LEFT' && !theme.isRTL) || (direction === 'RIGHT' && theme.isRTL)) {
