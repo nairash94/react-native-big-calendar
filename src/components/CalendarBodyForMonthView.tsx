@@ -175,6 +175,7 @@ CalendarBodyForMonthViewProps<T>) {
                 key={ii}
               >
                 <TouchableOpacity
+                  disabled={!(onPressDateHeader || onPressCell)}
                   onPress={() =>
                     date &&
                     (onPressDateHeader
