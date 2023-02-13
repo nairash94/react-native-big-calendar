@@ -65,7 +65,8 @@ function _CalendarBodyForMonthView<T extends ICalendarEventBase>({
 CalendarBodyForMonthViewProps<T>) {
   const { now } = useNow(!hideNowIndicator)
   const [calendarWidth, setCalendarWidth] = React.useState<number>(0)
-  const availableEvents = [...events]
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const availableEvents = React.useMemo(() => [...events], [events, now])
   const panResponder = usePanResponder({
     onSwipeHorizontal,
   })
