@@ -152,8 +152,7 @@ function _CalendarBody<T extends ICalendarEventBase>({
   )
 
   const theme = useTheme()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const availableEvents = React.useMemo(() => [...events], [events, now])
+  const availableEvents = [...events]
 
   return (
     <React.Fragment>
